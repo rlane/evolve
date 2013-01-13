@@ -9,12 +9,16 @@
 #include <SDL.h>
 #include <GL/glew.h>
 
+#include "critter.h"
+
 static void handle_events(void);
 static void handle_key_down(SDL_keysym *keysym);
+static void draw(void);
 
 SDL_Surface *screen;
 int screen_width = 800;
 int screen_height = 600;
+struct critter *critter;
 
 int main(int argc, char **argv)
 {
@@ -32,14 +36,30 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    glClearColor(0.1, 0.1, 0.3, 1.0);
+    struct critter *critter = critter_create();
 
+    fprintf(stderr, "Created critter:\n");
+    critter_dump(critter, stderr);
+    fprintf(stderr, "\n");
+
+    int tick = 0;
     while (1) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         handle_events();
+        critter_think(critter);
+        critter_act(critter);
+
+        draw();
         SDL_GL_SwapBuffers();
         SDL_Flip(screen);
-        usleep(30*1000);
+
+        if (tick % 100 == 0) {
+            fprintf(stderr, "Current critter (tick=%d):\n", tick);
+            critter_dump(critter, stderr);
+            fprintf(stderr, "\n");
+        }
+
+        usleep(16*1000);
+        tick++;
     }
 
     return 0;
@@ -70,4 +90,11 @@ static void handle_key_down(SDL_keysym *keysym)
     default:
         break;
     }
+}
+
+static void
+draw(void)
+{
+    glClearColor(0.1, 0.1, 0.3, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

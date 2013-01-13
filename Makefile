@@ -3,4 +3,4 @@ LDLIBS := `sdl-config --libs` `pkg-config --libs glew`
 
 all: evolve
 
-evolve: evolve.c
+evolve: evolve.c critter.c
