@@ -25,6 +25,9 @@ int main(int argc, char **argv)
     SDL_Init(SDL_INIT_VIDEO);
     signal(SIGINT, SIG_DFL);
 
+    //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
+
     screen = SDL_SetVideoMode(screen_width, screen_height, 0, SDL_OPENGL);
     if (screen == NULL) {
         fprintf(stderr, "SDL_SetVideoMode failed\n");

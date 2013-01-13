@@ -19,6 +19,12 @@ renderer_init(void)
     glLoadIdentity();
 
     glClearColor(0.1, 0.1, 0.2, 1.0);
+
+    glEnable(GL_MULTISAMPLE);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POLYGON_SMOOTH);
 }
 
 void
