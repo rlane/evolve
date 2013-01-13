@@ -12,6 +12,7 @@
 #include "critter.h"
 #include "renderer.h"
 
+static void set_video_mode(void);
 static void handle_events(void);
 static void handle_key_down(SDL_keysym *keysym);
 
@@ -25,14 +26,7 @@ int main(int argc, char **argv)
     SDL_Init(SDL_INIT_VIDEO);
     signal(SIGINT, SIG_DFL);
 
-    //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-    //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
-
-    screen = SDL_SetVideoMode(screen_width, screen_height, 0, SDL_OPENGL);
-    if (screen == NULL) {
-        fprintf(stderr, "SDL_SetVideoMode failed\n");
-        return 1;
-    }
+    set_video_mode();
 
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "glewInit failed\n");
@@ -68,6 +62,28 @@ int main(int argc, char **argv)
     }
 
     return 0;
+}
+
+static void
+set_video_mode(void)
+{
+    int flags = SDL_OPENGL | SDL_HWSURFACE | SDL_DOUBLEBUF;
+    int bpp = 0;
+
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+
+    if (!SDL_VideoModeOK(screen_width, screen_height, bpp, flags)) {
+        fprintf(stderr, "Failed to enable multisampling.\n");
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+    }
+
+    screen = SDL_SetVideoMode(screen_width, screen_height, bpp, flags);
+    if (screen == NULL) {
+        fprintf(stderr, "SDL_SetVideoMode failed\n");
+        exit(1);
+    }
 }
 
 static void handle_events(void)
