@@ -28,8 +28,14 @@ struct critter_brain {
 struct critter {
     struct critter_brain brain;
 
+    /* Outputs from the brain */
     float out_speed;
     float out_turn;
+
+    /* Physics state */
+    float x, y;
+    float vx, vy;
+    float heading;
 };
 
 struct critter *critter_create(void);

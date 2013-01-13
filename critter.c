@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 static void critter_brain_step(float outputs[CRITTER_OUTPUT_SIZE], const float inputs[CRITTER_INPUT_SIZE], const struct critter_brain *brain);
 static void critter_fetch_inputs(struct critter *critter, float inputs[CRITTER_INPUT_SIZE]);
@@ -45,6 +46,10 @@ critter_create(void)
     for (i = 0; i < CRITTER_MEMORY_SIZE; i++) {
 	critter->brain.memory[i] = prng();
     }
+
+    critter->x = prng() * 10.0f;
+    critter->y = prng() * 10.0f;
+    critter->heading = prng() * 360.0f;
 
     return critter;
 }

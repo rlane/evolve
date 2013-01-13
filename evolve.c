@@ -10,10 +10,10 @@
 #include <GL/glew.h>
 
 #include "critter.h"
+#include "renderer.h"
 
 static void handle_events(void);
 static void handle_key_down(SDL_keysym *keysym);
-static void draw(void);
 
 SDL_Surface *screen;
 int screen_width = 800;
@@ -36,11 +36,13 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    struct critter *critter = critter_create();
+    critter = critter_create();
 
     fprintf(stderr, "Created critter:\n");
     critter_dump(critter, stderr);
     fprintf(stderr, "\n");
+
+    renderer_init();
 
     int tick = 0;
     while (1) {
@@ -48,7 +50,7 @@ int main(int argc, char **argv)
         critter_think(critter);
         critter_act(critter);
 
-        draw();
+        renderer_draw();
         SDL_GL_SwapBuffers();
         SDL_Flip(screen);
 
@@ -90,11 +92,4 @@ static void handle_key_down(SDL_keysym *keysym)
     default:
         break;
     }
-}
-
-static void
-draw(void)
-{
-    glClearColor(0.1, 0.1, 0.3, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
