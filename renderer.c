@@ -1,3 +1,4 @@
+#include <math.h>
 #include <GL/glew.h>
 #include "critter.h"
 
@@ -13,7 +14,7 @@ renderer_init(void)
     glLoadIdentity();
     double size = 100.0;
     double aspect = (double)screen_width/screen_height;
-    gluOrtho2D(size, -size, -size/aspect, size/aspect);
+    gluOrtho2D(-size, size, -size/aspect, size/aspect);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -33,12 +34,12 @@ renderer_draw(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glRotatef(critter->heading, 0.0f, 0.0f, 1.0f);
     glTranslatef(critter->x, critter->y, 0.0f);
+    glRotatef(critter->heading*180.0f/M_PI, 0.0f, 0.0f, 1.0f);
 
     glBegin(GL_TRIANGLES);
-    glVertex3f( 0.0f, 1.5f, 0.0f);
-    glVertex3f(-1.0f,-1.0f, 0.0f);
-    glVertex3f( 1.0f,-1.0f, 0.0f);
+    glVertex3f(4.0f, 0.0f, 0.0f);
+    glVertex3f(-1.0f, -1.0f, 0.0f);
+    glVertex3f(-1.0f, 1.0f, 0.0f);
     glEnd();
 }

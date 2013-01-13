@@ -11,7 +11,7 @@ enum critter_input {
 };
 
 enum critter_output {
-    CO_SPEED,
+    CO_ACCEL,
     CO_TURN,
     CO_MEMORY_START,
 };
@@ -29,13 +29,13 @@ struct critter {
     struct critter_brain brain;
 
     /* Outputs from the brain */
-    float out_speed;
+    float out_accel;
     float out_turn;
 
     /* Physics state */
     float x, y;
     float vx, vy;
-    float heading;
+    float heading; /* radians */
 };
 
 struct critter *critter_create(void);
