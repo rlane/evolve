@@ -189,7 +189,7 @@ critter_act(struct critter *critter)
 
     /* Compute drag */
     float drag_coefficient = 0.05f;
-    float v_squared = critter->vx*critter->vx + critter->vx*critter->vy;
+    float v_squared = critter->vx*critter->vx + critter->vy*critter->vy;
     if (v_squared > 0.001f) {
         float drag_acc = drag_coefficient*v_squared;
         float v_mag = sqrt(v_squared);
