@@ -7,6 +7,7 @@
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>
+#include <math.h>
 #include <SDL.h>
 #include <GL/glew.h>
 
@@ -16,11 +17,14 @@
 static void set_video_mode(void);
 static void handle_events(void);
 static void handle_key_down(SDL_keysym *keysym);
+static void repopulate(void);
+static void cull(void);
 
 SDL_Surface *screen;
 int screen_width = 800;
 int screen_height = 600;
 struct critter *critters[MAX_CRITTERS];
+int tick;
 
 int main(int argc, char **argv)
 {
@@ -34,19 +38,14 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    int i;
-    for (i = 0; i < MAX_CRITTERS; i++) {
-        critters[i] = critter_create();
-    }
-
     renderer_init();
 
-    int tick = 0;
     while (1) {
         handle_events();
+        repopulate();
 
         int i, j;
-        for (i = 0; i < 10; i++) {
+        for (i = 0; i < 1; i++) {
             for (j = 0; j < MAX_CRITTERS; j++) {
                 struct critter *critter = critters[j];
                 if (critter) critter_think(critter);
@@ -55,6 +54,10 @@ int main(int argc, char **argv)
                 struct critter *critter = critters[j];
                 if (critter) critter_act(critter);
             }
+        }
+
+        if (tick % 300 == 0) {
+            cull();
         }
 
         renderer_draw();
@@ -114,5 +117,59 @@ static void handle_key_down(SDL_keysym *keysym)
         break;
     default:
         break;
+    }
+}
+
+static void
+repopulate(void)
+{
+    int i;
+    for (i = 0; i < MAX_CRITTERS; i++) {
+        if (!critters[i]) {
+            critters[i] = critter_create();
+            fprintf(stderr, "created a new critter\n");
+        }
+    }
+}
+
+/* Higher the result the worse the fitness */
+static float
+fitness(const struct critter *critter)
+{
+    float dx = critter->x - 10.0f;
+    float dy = critter->y - 10.0f;
+    return sqrtf(dx*dx + dy*dy);
+}
+
+static int
+cull_sorter(const void *_a, const void *_b)
+{
+    const struct critter *a = *(const struct critter **)_a;
+    const struct critter *b = *(const struct critter **)_b;
+    if (a == NULL && b == NULL) {
+        return 0;
+    } else if (a == NULL) {
+        return -1;
+    } else if (b == NULL) {
+        return 1;
+    } else {
+        return (int)(fitness(a) - fitness(b));
+    }
+}
+
+static void
+cull(void)
+{
+    fprintf(stderr, "starting cull\n");
+
+    qsort(critters, MAX_CRITTERS, sizeof(critters[0]), cull_sorter);
+
+    int i;
+    for (i = MAX_CRITTERS/2; i < MAX_CRITTERS; i++) {
+        if (critters[i]) {
+            fprintf(stderr, "culling critter with score %.2f\n", fitness(critters[i]));
+            critter_destroy(critters[i]);
+            critters[i] = NULL;
+        }
     }
 }
