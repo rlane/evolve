@@ -198,4 +198,9 @@ critter_act(struct critter *critter)
         critter->vx -= drag_acc*vx_norm*tick_length;
         critter->vy -= drag_acc*vy_norm*tick_length;
     }
+
+    /* Rotation */
+    critter->heading += critter->out_turn * tick_length;
+    if (critter->heading > M_PI) critter->heading -= 2*M_PI;
+    if (critter->heading < -M_PI) critter->heading += 2*M_PI;
 }
