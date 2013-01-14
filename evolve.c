@@ -44,8 +44,12 @@ int main(int argc, char **argv)
     int tick = 0;
     while (1) {
         handle_events();
-        critter_think(critter);
-        critter_act(critter);
+
+        int i;
+        for (i = 0; i < 10; i++) {
+            critter_think(critter);
+            critter_act(critter);
+        }
 
         renderer_draw();
         SDL_GL_SwapBuffers();
