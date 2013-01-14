@@ -25,6 +25,14 @@ clamp(float x)
     return x;
 }
 
+static float
+clamp_angle(float a)
+{
+    if (a > M_PI) a -= 2*M_PI;
+    if (a < -M_PI) a += 2*M_PI;
+    return a;
+}
+
 struct critter *
 critter_create(void)
 {
@@ -133,7 +141,16 @@ static void
 critter_fetch_inputs(struct critter *critter, float inputs[CRITTER_INPUT_SIZE])
 {
     inputs[CI_SPEED] = sqrtf(critter->vx*critter->vx + critter->vy*critter->vy);
-    inputs[CI_LIGHT_ANGLE] = 0.0;
+    {
+        float light_x = 10.0f;
+        float light_y = 10.0f;
+        float dx = light_x - critter->x;
+        float dy = light_y - critter->y;
+        float a = atan2f(dy, dx);
+        float da = clamp_angle(a - critter->heading);
+        inputs[CI_LIGHT_ANGLE] = da/M_PI;
+        assert(inputs[CI_LIGHT_ANGLE] <= 1.0f && inputs[CI_LIGHT_ANGLE] >= -1.0f);
+    }
     inputs[CI_ONE] = 1.0;
     memcpy(inputs+CI_MEMORY_START, critter->brain.memory, sizeof(critter->brain.memory));
 }
@@ -201,6 +218,5 @@ critter_act(struct critter *critter)
 
     /* Rotation */
     critter->heading += critter->out_turn * tick_length;
-    if (critter->heading > M_PI) critter->heading -= 2*M_PI;
-    if (critter->heading < -M_PI) critter->heading += 2*M_PI;
+    critter->heading = clamp_angle(critter->heading);
 }
