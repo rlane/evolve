@@ -51,7 +51,7 @@ int main(int argc, char **argv)
         SDL_GL_SwapBuffers();
         SDL_Flip(screen);
 
-        if (tick % 100 == 0) {
+        if (tick % 10 == 0) {
             fprintf(stderr, "Current critter (tick=%d):\n", tick);
             critter_dump(critter, stderr);
             fprintf(stderr, "\n");
