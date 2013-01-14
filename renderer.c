@@ -1,9 +1,7 @@
 #include <math.h>
 #include <GL/glew.h>
+#include "evolve.h"
 #include "critter.h"
-
-extern struct critter *critter;
-extern int screen_width, screen_height;
 
 void
 renderer_init(void)
@@ -32,14 +30,23 @@ void
 renderer_draw(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
 
-    glTranslatef(critter->x, critter->y, 0.0f);
-    glRotatef(critter->heading*180.0f/M_PI, 0.0f, 0.0f, 1.0f);
+    int i;
+    for (i = 0; i < MAX_CRITTERS; i++) {
+        struct critter *critter = critters[i];
+        if (!critter) {
+            continue;
+        }
 
-    glBegin(GL_TRIANGLES);
-    glVertex3f(4.0f, 0.0f, 0.0f);
-    glVertex3f(-1.0f, -1.0f, 0.0f);
-    glVertex3f(-1.0f, 1.0f, 0.0f);
-    glEnd();
+        glLoadIdentity();
+
+        glTranslatef(critter->x, critter->y, 0.0f);
+        glRotatef(critter->heading*180.0f/M_PI, 0.0f, 0.0f, 1.0f);
+
+        glBegin(GL_TRIANGLES);
+        glVertex3f(4.0f, 0.0f, 0.0f);
+        glVertex3f(-1.0f, -1.0f, 0.0f);
+        glVertex3f(-1.0f, 1.0f, 0.0f);
+        glEnd();
+    }
 }

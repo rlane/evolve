@@ -1,3 +1,4 @@
+#include "evolve.h"
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -19,7 +20,7 @@ static void handle_key_down(SDL_keysym *keysym);
 SDL_Surface *screen;
 int screen_width = 800;
 int screen_height = 600;
-struct critter *critter;
+struct critter *critters[MAX_CRITTERS];
 
 int main(int argc, char **argv)
 {
@@ -33,11 +34,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    critter = critter_create();
-
-    fprintf(stderr, "Created critter:\n");
-    critter_dump(critter, stderr);
-    fprintf(stderr, "\n");
+    int i;
+    for (i = 0; i < MAX_CRITTERS; i++) {
+        critters[i] = critter_create();
+    }
 
     renderer_init();
 
@@ -45,21 +45,21 @@ int main(int argc, char **argv)
     while (1) {
         handle_events();
 
-        int i;
+        int i, j;
         for (i = 0; i < 10; i++) {
-            critter_think(critter);
-            critter_act(critter);
+            for (j = 0; j < MAX_CRITTERS; j++) {
+                struct critter *critter = critters[j];
+                if (critter) critter_think(critter);
+            }
+            for (j = 0; j < MAX_CRITTERS; j++) {
+                struct critter *critter = critters[j];
+                if (critter) critter_act(critter);
+            }
         }
 
         renderer_draw();
         SDL_GL_SwapBuffers();
         SDL_Flip(screen);
-
-        if (tick % 10 == 0) {
-            fprintf(stderr, "Current critter (tick=%d):\n", tick);
-            critter_dump(critter, stderr);
-            fprintf(stderr, "\n");
-        }
 
         usleep(16*1000);
         tick++;
