@@ -69,6 +69,7 @@ critter_dump(struct critter *critter, FILE *file)
 
     fprintf(file, "Position: "FMT", "FMT"\n", critter->x, critter->y);
     fprintf(file, "Velocity: "FMT", "FMT"\n", critter->vx, critter->vy);
+    fprintf(file, "Speed: "FMT"\n", sqrtf(powf(critter->vx, 2) + powf(critter->vy, 2)));
     fprintf(file, "Heading: "FMT"\n", critter->heading);
 
     fprintf(file, "Brain matrix:\n");
@@ -140,8 +141,8 @@ critter_fetch_inputs(struct critter *critter, float inputs[CRITTER_INPUT_SIZE])
 static void
 critter_store_outputs(struct critter *critter, float outputs[CRITTER_OUTPUT_SIZE])
 {
-    critter->out_accel = outputs[CO_ACCEL];
-    critter->out_turn = outputs[CO_TURN];
+    critter->out_accel = outputs[CO_ACCEL] * 10.0f;
+    critter->out_turn = outputs[CO_TURN] * 1.0f;
 
     /* Memory changes slowly */
     int i;
@@ -184,5 +185,17 @@ critter_act(struct critter *critter)
     if (critter->y < -world_size) {
         critter->y = -world_size;
         critter->vy *= -bounciness;
+    }
+
+    /* Compute drag */
+    float drag_coefficient = 0.05f;
+    float v_squared = critter->vx*critter->vx + critter->vx*critter->vy;
+    if (v_squared > 0.001f) {
+        float drag_acc = drag_coefficient*v_squared;
+        float v_mag = sqrt(v_squared);
+        float vx_norm = critter->vx/v_mag;
+        float vy_norm = critter->vy/v_mag;
+        critter->vx -= drag_acc*vx_norm*tick_length;
+        critter->vy -= drag_acc*vy_norm*tick_length;
     }
 }
