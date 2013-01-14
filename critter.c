@@ -156,10 +156,33 @@ void
 critter_act(struct critter *critter)
 {
     const float tick_length = 0.016;
+    const float world_size = 100.0f;
+    const float bounciness = 0.8f;
+
     critter->x += critter->vx*tick_length*0.5;
     critter->y += critter->vy*tick_length*0.5;
     critter->vx += critter->out_accel*cosf(critter->heading)*tick_length;
     critter->vy += critter->out_accel*sinf(critter->heading)*tick_length;
     critter->x += critter->vx*tick_length*0.5;
     critter->y += critter->vy*tick_length*0.5;
+
+    if (critter->x > world_size) {
+        critter->x = world_size;
+        critter->vx *= -bounciness;
+    }
+
+    if (critter->x < -world_size) {
+        critter->x = -world_size;
+        critter->vx *= -bounciness;
+    }
+
+    if (critter->y > world_size) {
+        critter->y = world_size;
+        critter->vy *= -bounciness;
+    }
+
+    if (critter->y < -world_size) {
+        critter->y = -world_size;
+        critter->vy *= -bounciness;
+    }
 }
