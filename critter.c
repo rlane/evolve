@@ -132,7 +132,7 @@ critter_brain_step_wrapper(float outputs[CRITTER_OUTPUT_SIZE],
 static void
 critter_fetch_inputs(struct critter *critter, float inputs[CRITTER_INPUT_SIZE])
 {
-    inputs[CI_SPEED] = 0.0;
+    inputs[CI_SPEED] = sqrtf(critter->vx*critter->vx + critter->vy*critter->vy);
     inputs[CI_LIGHT_ANGLE] = 0.0;
     inputs[CI_ONE] = 1.0;
     memcpy(inputs+CI_MEMORY_START, critter->brain.memory, sizeof(critter->brain.memory));
