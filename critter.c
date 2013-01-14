@@ -140,7 +140,13 @@ critter_brain_step_wrapper(float outputs[CRITTER_OUTPUT_SIZE],
 static void
 critter_fetch_inputs(struct critter *critter, float inputs[CRITTER_INPUT_SIZE])
 {
-    inputs[CI_SPEED] = sqrtf(critter->vx*critter->vx + critter->vy*critter->vy);
+    {
+        float speed = sqrtf(critter->vx*critter->vx + critter->vy*critter->vy);
+        inputs[CI_SPEED] = clamp(logf(fabsf(speed))/log(20.0f));
+        if (speed < 0.0f) inputs[CI_SPEED] *= -1.0f;
+        assert(inputs[CI_SPEED] <= 1.0f && inputs[CI_SPEED] >= -1.0f);
+    }
+
     {
         float light_x = 10.0f;
         float light_y = 10.0f;
