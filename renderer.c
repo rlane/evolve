@@ -66,7 +66,7 @@ renderer_draw(void)
     }
 
 
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glColor4f(0.08f, 0.49f, 0.06f, 1.0f);
     int i;
     for (i = 0; i < MAX_CRITTERS; i++) {
         struct critter *critter = critters[i];
