@@ -14,6 +14,8 @@
 #include "critter.h"
 #include "renderer.h"
 
+#define EVOLVE_INTERVAL 640
+
 static void set_video_mode(void);
 static void handle_events(void);
 static void handle_key_down(SDL_keysym *keysym);
@@ -59,7 +61,7 @@ int main(int argc, char **argv)
                 struct critter *critter = critters[j];
                 if (critter) critter_act(critter);
             }
-            if (tick % 300 == 0) {
+            if (tick % EVOLVE_INTERVAL == 0) {
                 evolve();
             }
         }
