@@ -52,7 +52,7 @@ renderer_draw(void)
     /* Draw a circle for the light source */
     {
         glLoadIdentity();
-        glTranslatef(10.0f, 10.0f, 0.0f);
+        glTranslatef(light_x, light_y, 0.0f);
         glColor4f(0.91f, 0.93f, 0.10f, 1.0f);
         glBegin(GL_LINE_LOOP);
         const float radius = 3.0f;

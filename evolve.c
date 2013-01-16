@@ -25,6 +25,8 @@ SDL_Surface *screen;
 int screen_width = 800;
 int screen_height = 600;
 struct critter *critters[MAX_CRITTERS];
+float light_x = 10.0f, light_y = 10.0f;
+
 int tick;
 int time_multiplier = 4;
 
@@ -65,6 +67,10 @@ int main(int argc, char **argv)
             }
             if (tick % EVOLVE_INTERVAL == 0) {
                 evolve();
+            }
+            if (tick % (EVOLVE_INTERVAL*10) == 0) {
+                light_x = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
+                light_y = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
             }
         }
 
@@ -145,8 +151,8 @@ static void handle_key_down(SDL_keysym *keysym)
 static float
 fitness(const struct critter *critter)
 {
-    float dx = critter->x - 10.0f;
-    float dy = critter->y - 10.0f;
+    float dx = critter->x - light_x;
+    float dy = critter->y - light_y;
     return sqrtf(dx*dx + dy*dy);
 }
 

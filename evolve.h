@@ -8,5 +8,6 @@ struct critter;
 extern int screen_width;
 extern int screen_height;
 extern struct critter *critters[MAX_CRITTERS];
+extern float light_x, light_y;
 
 #endif
