@@ -176,13 +176,13 @@ evolve(void)
     int i;
     for (i = MAX_CRITTERS/2; i < MAX_CRITTERS; i++) {
         if (critters[i]) {
-            fprintf(stderr, "culling critter with score %.2f\n", fitness(critters[i]));
+            fprintf(stderr, "culling loser critter with score %.2f\n", fitness(critters[i]));
             critter_destroy(critters[i]);
             critters[i] = NULL;
         }
     }
 
-    for (i = MAX_CRITTERS/2; i < 7*MAX_CRITTERS/8; i++) {
+    for (i = MAX_CRITTERS/2; i < MAX_CRITTERS; i++) {
         const struct critter *parent1 = critters[random() % (MAX_CRITTERS/2)];
         const struct critter *parent2 = critters[random() % (MAX_CRITTERS/2)];
         assert(parent1 && parent2);
@@ -190,9 +190,14 @@ evolve(void)
         critters[i] = critter_create_child(parent1, parent2);
     }
 
-    for (i = 7*MAX_CRITTERS/8; i < MAX_CRITTERS; i++) {
-        assert(!critters[i]);
-        critters[i] = critter_create_random();
+    /* Kill 1/8 of the winners too */
+    for (i = 0; i < MAX_CRITTERS/8; i++) {
+        int j = random() % (MAX_CRITTERS/2);
+        if (critters[j]) {
+            fprintf(stderr, "culling winner critter with score %.2f\n", fitness(critters[j]));
+            critter_destroy(critters[j]);
+            critters[j] = critter_create_random();
+        }
     }
 
     fprintf(stderr, "finished evolution step\n");
