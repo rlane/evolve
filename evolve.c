@@ -48,6 +48,8 @@ int main(int argc, char **argv)
     }
 
     while (1) {
+        uint32_t frame_start_ms = SDL_GetTicks();
+
         handle_events();
 
         int i, j;
@@ -70,7 +72,11 @@ int main(int argc, char **argv)
         SDL_GL_SwapBuffers();
         SDL_Flip(screen);
 
-        usleep(16*1000);
+        uint32_t frame_end_ms = SDL_GetTicks();
+        int sleep_ms = 16 - (frame_end_ms - frame_start_ms);
+        if (sleep_ms > 0) {
+            SDL_Delay(sleep_ms);
+        }
     }
 
     return 0;
