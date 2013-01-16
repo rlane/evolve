@@ -39,6 +39,7 @@ struct critter {
 };
 
 struct critter *critter_create_random(void);
+struct critter *critter_create_child(const struct critter *parent1, const struct critter *parent2);
 void critter_destroy(struct critter *critter);
 void critter_dump(struct critter *critter, FILE *file);
 void critter_think(struct critter *critter);

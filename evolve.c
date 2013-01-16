@@ -164,7 +164,16 @@ evolve(void)
         }
     }
 
-    for (i = MAX_CRITTERS/2; i < MAX_CRITTERS; i++) {
+    for (i = MAX_CRITTERS/2; i < 7*MAX_CRITTERS/8; i++) {
+        const struct critter *parent1 = critters[random() % (MAX_CRITTERS/2)];
+        const struct critter *parent2 = critters[random() % (MAX_CRITTERS/2)];
+        assert(parent1 && parent2);
+        assert(!critters[i]);
+        critters[i] = critter_create_child(parent1, parent2);
+    }
+
+    for (i = 7*MAX_CRITTERS/8; i < MAX_CRITTERS; i++) {
+        assert(!critters[i]);
         critters[i] = critter_create_random();
     }
 

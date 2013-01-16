@@ -62,6 +62,41 @@ critter_create_random(void)
     return critter;
 }
 
+struct critter *
+critter_create_child(const struct critter *parent1, const struct critter *parent2)
+{
+    struct critter *critter = calloc(1, sizeof(*critter));
+    assert(critter);
+
+    const struct critter *parents[2] = { parent1, parent2 };
+    int num_parents = 2;
+    int inherit_rows = random() % 2;
+
+    int i, j;
+    for (i = 0; i < CRITTER_OUTPUT_SIZE; i++) {
+	for (j = 0; j < CRITTER_INPUT_SIZE; j++) {
+            int idx = (inherit_rows ? i : j) % num_parents;
+            const struct critter *parent = parents[idx];
+	    critter->brain.weights[i][j] = parent->brain.weights[i][j];
+        }
+    }
+
+    for (i = 0; i < CRITTER_MEMORY_SIZE; i++) {
+	critter->brain.memory[i] = prng();
+    }
+
+    /* Mutate */
+    i = random() % CRITTER_OUTPUT_SIZE;
+    j = random() % CRITTER_INPUT_SIZE;
+    critter->brain.weights[i][j] += prng()/10.0f;
+
+    critter->x = prng() * 10.0f;
+    critter->y = prng() * 10.0f;
+    critter->heading = prng() * M_PI;
+
+    return critter;
+}
+
 void
 critter_destroy(struct critter *critter)
 {
