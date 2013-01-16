@@ -17,8 +17,7 @@
 static void set_video_mode(void);
 static void handle_events(void);
 static void handle_key_down(SDL_keysym *keysym);
-static void repopulate(void);
-static void cull(void);
+static void evolve(void);
 
 SDL_Surface *screen;
 int screen_width = 800;
@@ -40,9 +39,13 @@ int main(int argc, char **argv)
 
     renderer_init();
 
+    int i;
+    for (i = 0; i < MAX_CRITTERS; i++) {
+        critters[i] = critter_create_random();
+    }
+
     while (1) {
         handle_events();
-        repopulate();
 
         int i, j;
         for (i = 0; i < 1; i++) {
@@ -57,7 +60,7 @@ int main(int argc, char **argv)
         }
 
         if (tick % 300 == 0) {
-            cull();
+            evolve();
         }
 
         renderer_draw();
@@ -120,18 +123,6 @@ static void handle_key_down(SDL_keysym *keysym)
     }
 }
 
-static void
-repopulate(void)
-{
-    int i;
-    for (i = 0; i < MAX_CRITTERS; i++) {
-        if (!critters[i]) {
-            critters[i] = critter_create();
-            fprintf(stderr, "created a new critter\n");
-        }
-    }
-}
-
 /* Higher the result the worse the fitness */
 static float
 fitness(const struct critter *critter)
@@ -142,7 +133,7 @@ fitness(const struct critter *critter)
 }
 
 static int
-cull_sorter(const void *_a, const void *_b)
+critter_sorter(const void *_a, const void *_b)
 {
     const struct critter *a = *(const struct critter **)_a;
     const struct critter *b = *(const struct critter **)_b;
@@ -158,11 +149,11 @@ cull_sorter(const void *_a, const void *_b)
 }
 
 static void
-cull(void)
+evolve(void)
 {
-    fprintf(stderr, "starting cull\n");
+    fprintf(stderr, "starting evolution step\n");
 
-    qsort(critters, MAX_CRITTERS, sizeof(critters[0]), cull_sorter);
+    qsort(critters, MAX_CRITTERS, sizeof(critters[0]), critter_sorter);
 
     int i;
     for (i = MAX_CRITTERS/2; i < MAX_CRITTERS; i++) {
@@ -172,4 +163,10 @@ cull(void)
             critters[i] = NULL;
         }
     }
+
+    for (i = MAX_CRITTERS/2; i < MAX_CRITTERS; i++) {
+        critters[i] = critter_create_random();
+    }
+
+    fprintf(stderr, "finished evolution step\n");
 }

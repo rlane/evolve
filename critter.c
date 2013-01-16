@@ -34,7 +34,7 @@ clamp_angle(float a)
 }
 
 struct critter *
-critter_create(void)
+critter_create_random(void)
 {
     struct critter *critter = calloc(1, sizeof(*critter));
     assert(critter);

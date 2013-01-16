@@ -38,7 +38,7 @@ struct critter {
     float heading; /* radians */
 };
 
-struct critter *critter_create(void);
+struct critter *critter_create_random(void);
 void critter_destroy(struct critter *critter);
 void critter_dump(struct critter *critter, FILE *file);
 void critter_think(struct critter *critter);
