@@ -31,6 +31,24 @@ renderer_draw(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    /* Draw a circle for the light source */
+    {
+        glLoadIdentity();
+        glTranslatef(10.0f, 10.0f, 0.0f);
+        glColor4f(0.91f, 0.93f, 0.10f, 1.0f);
+        glBegin(GL_LINE_LOOP);
+        const float radius = 3.0f;
+        const int n = 32;
+        int i;
+        for (i = 0; i < n; i++) {
+            float a = i*M_PI*2.0f/n;
+            glVertex2f(cos(a)*radius,sin(a)*radius);
+        }
+        glEnd();
+    }
+
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     int i;
     for (i = 0; i < MAX_CRITTERS; i++) {
         struct critter *critter = critters[i];
