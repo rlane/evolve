@@ -24,6 +24,7 @@ int screen_width = 800;
 int screen_height = 600;
 struct critter *critters[MAX_CRITTERS];
 int tick;
+int time_multiplier = 4;
 
 int main(int argc, char **argv)
 {
@@ -48,7 +49,8 @@ int main(int argc, char **argv)
         handle_events();
 
         int i, j;
-        for (i = 0; i < 1; i++) {
+        for (i = 0; i < time_multiplier; i++) {
+            tick++;
             for (j = 0; j < MAX_CRITTERS; j++) {
                 struct critter *critter = critters[j];
                 if (critter) critter_think(critter);
@@ -57,10 +59,9 @@ int main(int argc, char **argv)
                 struct critter *critter = critters[j];
                 if (critter) critter_act(critter);
             }
-        }
-
-        if (tick % 300 == 0) {
-            evolve();
+            if (tick % 300 == 0) {
+                evolve();
+            }
         }
 
         renderer_draw();
@@ -68,7 +69,6 @@ int main(int argc, char **argv)
         SDL_Flip(screen);
 
         usleep(16*1000);
-        tick++;
     }
 
     return 0;
@@ -117,6 +117,16 @@ static void handle_key_down(SDL_keysym *keysym)
     switch (keysym->sym) {
     case SDLK_ESCAPE:
         exit(0);
+        break;
+    case SDLK_RIGHT:
+        time_multiplier *= 2;
+        fprintf(stderr, "time multiplier: %dx\n", time_multiplier);
+        break;
+    case SDLK_LEFT:
+        if (time_multiplier > 1) {
+            time_multiplier /= 2;
+        }
+        fprintf(stderr, "time multiplier: %dx\n", time_multiplier);
         break;
     default:
         break;
