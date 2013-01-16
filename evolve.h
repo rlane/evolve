@@ -3,7 +3,7 @@
 
 struct critter;
 
-#define MAX_CRITTERS 16
+#define MAX_CRITTERS 256
 
 extern int screen_width;
 extern int screen_height;

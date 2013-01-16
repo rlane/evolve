@@ -33,6 +33,19 @@ clamp_angle(float a)
     return a;
 }
 
+static void
+critter_init_common(struct critter *critter)
+{
+    int i;
+    for (i = 0; i < CRITTER_MEMORY_SIZE; i++) {
+	critter->brain.memory[i] = prng();
+    }
+
+    critter->x = prng() * 10.0f;
+    critter->y = prng() * 10.0f;
+    critter->heading = prng() * M_PI;
+}
+
 struct critter *
 critter_create_random(void)
 {
@@ -51,13 +64,7 @@ critter_create_random(void)
 	critter->brain.weights[CO_MEMORY_START+i][CI_MEMORY_START+i] = 1.0;
     }
 
-    for (i = 0; i < CRITTER_MEMORY_SIZE; i++) {
-	critter->brain.memory[i] = prng();
-    }
-
-    critter->x = prng() * 10.0f;
-    critter->y = prng() * 10.0f;
-    critter->heading = prng() * M_PI;
+    critter_init_common(critter);
 
     return critter;
 }
@@ -81,18 +88,12 @@ critter_create_child(const struct critter *parent1, const struct critter *parent
         }
     }
 
-    for (i = 0; i < CRITTER_MEMORY_SIZE; i++) {
-	critter->brain.memory[i] = prng();
-    }
-
     /* Mutate */
     i = random() % CRITTER_OUTPUT_SIZE;
     j = random() % CRITTER_INPUT_SIZE;
     critter->brain.weights[i][j] += prng()/10.0f;
 
-    critter->x = prng() * 10.0f;
-    critter->y = prng() * 10.0f;
-    critter->heading = prng() * M_PI;
+    critter_init_common(critter);
 
     return critter;
 }
