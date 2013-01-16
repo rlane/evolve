@@ -17,7 +17,7 @@ renderer_init(void)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glClearColor(0.1, 0.1, 0.2, 1.0);
+    glClearColor(0.10196078, 0.11372549, 0.19607843, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_MULTISAMPLE);
