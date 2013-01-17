@@ -198,8 +198,8 @@ critter_fetch_inputs(struct critter *critter, float inputs[CRITTER_INPUT_SIZE])
     }
 
     {
-        float dx = light_x - critter->x;
-        float dy = light_y - critter->y;
+        float dx = critter->x - light_x;
+        float dy = critter->y - light_y;
         float a = atan2f(dy, dx);
         float da = clamp_angle(a - critter->heading);
         inputs[CI_LIGHT_ANGLE] = da/M_PI;
