@@ -14,7 +14,7 @@
 #include "critter.h"
 #include "renderer.h"
 
-#define EVOLVE_INTERVAL 640
+#define EVOLVE_INTERVAL 6400
 
 static void set_video_mode(void);
 static void handle_events(void);
