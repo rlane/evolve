@@ -31,6 +31,8 @@ float light_x = 10.0f, light_y = 10.0f;
 int tick;
 int time_multiplier = 4;
 bool paused = false;
+bool verbose = false;
+int evolutions = 0;
 
 int main(int argc, char **argv)
 {
@@ -188,14 +190,16 @@ critter_sorter(const void *_a, const void *_b)
 static void
 evolve(void)
 {
-    fprintf(stderr, "starting evolution step\n");
+    fprintf(stderr, "starting evolution step %d\n", evolutions);
 
     qsort(critters, MAX_CRITTERS, sizeof(critters[0]), critter_sorter);
 
     int i;
     for (i = MAX_CRITTERS/2; i < MAX_CRITTERS; i++) {
         if (critters[i]) {
-            fprintf(stderr, "culling loser critter with score %.2f\n", fitness(critters[i]));
+            if (verbose) {
+                fprintf(stderr, "culling loser critter with score %.2f\n", fitness(critters[i]));
+            }
             critter_destroy(critters[i]);
             critters[i] = NULL;
         }
@@ -213,11 +217,17 @@ evolve(void)
     for (i = 0; i < MAX_CRITTERS/8; i++) {
         int j = random() % (MAX_CRITTERS/2);
         if (critters[j]) {
-            fprintf(stderr, "culling winner critter with score %.2f\n", fitness(critters[j]));
+            if (verbose) {
+                fprintf(stderr, "culling winner critter with score %.2f\n", fitness(critters[j]));
+            }
             critter_destroy(critters[j]);
             critters[j] = critter_create_random();
         }
     }
 
-    fprintf(stderr, "finished evolution step\n");
+    if (verbose) {
+        fprintf(stderr, "finished evolution step %d\n", evolutions);
+    }
+
+    evolutions++;
 }
