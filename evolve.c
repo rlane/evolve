@@ -8,6 +8,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
+#include <sys/time.h>
 #include <SDL.h>
 #include <GL/glew.h>
 
@@ -33,6 +34,12 @@ bool paused = false;
 
 int main(int argc, char **argv)
 {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned int seed = tv.tv_usec;
+    fprintf(stderr, "using random seed %u\n", seed);
+    srandom(seed);
+
     SDL_Init(SDL_INIT_VIDEO);
     signal(SIGINT, SIG_DFL);
 
