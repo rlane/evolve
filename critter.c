@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "evolve.h"
 
 static void critter_brain_step(float outputs[CRITTER_OUTPUT_SIZE], const float inputs[CRITTER_INPUT_SIZE], const struct critter_brain *brain);
 static void critter_fetch_inputs(struct critter *critter, float inputs[CRITTER_INPUT_SIZE]);
@@ -184,8 +185,6 @@ critter_fetch_inputs(struct critter *critter, float inputs[CRITTER_INPUT_SIZE])
     }
 
     {
-        float light_x = 10.0f;
-        float light_y = 10.0f;
         float dx = light_x - critter->x;
         float dy = light_y - critter->y;
         float a = atan2f(dy, dx);
