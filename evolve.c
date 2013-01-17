@@ -79,10 +79,6 @@ int main(int argc, char **argv)
                 if (tick % EVOLVE_INTERVAL == 0) {
                     evolve();
                 }
-                if (tick % (EVOLVE_INTERVAL*10) == 0) {
-                    light_x = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
-                    light_y = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
-                }
             }
         }
 
@@ -224,6 +220,9 @@ evolve(void)
             critters[j] = critter_create_random();
         }
     }
+
+    light_x = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
+    light_y = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
 
     if (verbose) {
         fprintf(stderr, "finished evolution step %d\n", evolutions);
