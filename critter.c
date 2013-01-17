@@ -78,21 +78,34 @@ critter_create_child(const struct critter *parent1, const struct critter *parent
 
     const struct critter *parents[2] = { parent1, parent2 };
     int num_parents = 2;
-    int inherit_rows = random() % 2;
 
-    int i, j;
-    for (i = 0; i < CRITTER_OUTPUT_SIZE; i++) {
-	for (j = 0; j < CRITTER_INPUT_SIZE; j++) {
-            int idx = (inherit_rows ? i : j) % num_parents;
-            const struct critter *parent = parents[idx];
-	    critter->brain.weights[i][j] = parent->brain.weights[i][j];
+    if (random() % 2) {
+        /* Inherit rows (outputs) */
+        int i, j;
+        for (i = 0; i < CRITTER_OUTPUT_SIZE; i++) {
+            const struct critter *parent = parents[random() % num_parents];
+            for (j = 0; j < CRITTER_INPUT_SIZE; j++) {
+                critter->brain.weights[i][j] = parent->brain.weights[i][j];
+            }
+        }
+    } else {
+        /* Inherit columns (inputs) */
+        int i, j;
+        for (j = 0; j < CRITTER_INPUT_SIZE; j++) {
+            const struct critter *parent = parents[random() % num_parents];
+            for (i = 0; i < CRITTER_OUTPUT_SIZE; i++) {
+                critter->brain.weights[i][j] = parent->brain.weights[i][j];
+            }
         }
     }
 
     /* Mutate */
-    i = random() % CRITTER_OUTPUT_SIZE;
-    j = random() % CRITTER_INPUT_SIZE;
-    critter->brain.weights[i][j] += prng()/10.0f;
+    {
+        int i, j;
+        i = random() % CRITTER_OUTPUT_SIZE;
+        j = random() % CRITTER_INPUT_SIZE;
+        critter->brain.weights[i][j] += prng()/10.0f;
+    }
 
     critter_init_common(critter);
 
