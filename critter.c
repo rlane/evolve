@@ -42,8 +42,8 @@ critter_init_common(struct critter *critter)
 	critter->brain.memory[i] = prng();
     }
 
-    critter->x = prng() * 10.0f;
-    critter->y = prng() * 10.0f;
+    critter->x = prng() * 50.0f;
+    critter->y = prng() * 50.0f;
     critter->heading = prng() * M_PI;
 }
 
