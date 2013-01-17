@@ -29,6 +29,7 @@ float light_x = 10.0f, light_y = 10.0f;
 
 int tick;
 int time_multiplier = 4;
+bool paused = false;
 
 int main(int argc, char **argv)
 {
@@ -54,23 +55,25 @@ int main(int argc, char **argv)
 
         handle_events();
 
-        int i, j;
-        for (i = 0; i < time_multiplier; i++) {
-            tick++;
-            for (j = 0; j < MAX_CRITTERS; j++) {
-                struct critter *critter = critters[j];
-                if (critter) critter_think(critter);
-            }
-            for (j = 0; j < MAX_CRITTERS; j++) {
-                struct critter *critter = critters[j];
-                if (critter) critter_act(critter);
-            }
-            if (tick % EVOLVE_INTERVAL == 0) {
-                evolve();
-            }
-            if (tick % (EVOLVE_INTERVAL*10) == 0) {
-                light_x = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
-                light_y = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
+        if (!paused) {
+            int i, j;
+            for (i = 0; i < time_multiplier; i++) {
+                tick++;
+                for (j = 0; j < MAX_CRITTERS; j++) {
+                    struct critter *critter = critters[j];
+                    if (critter) critter_think(critter);
+                }
+                for (j = 0; j < MAX_CRITTERS; j++) {
+                    struct critter *critter = critters[j];
+                    if (critter) critter_act(critter);
+                }
+                if (tick % EVOLVE_INTERVAL == 0) {
+                    evolve();
+                }
+                if (tick % (EVOLVE_INTERVAL*10) == 0) {
+                    light_x = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
+                    light_y = ((random() / (RAND_MAX/2.0f)) - 1.0f) * 30.0f;
+                }
             }
         }
 
@@ -141,6 +144,9 @@ static void handle_key_down(SDL_keysym *keysym)
             time_multiplier /= 2;
         }
         fprintf(stderr, "time multiplier: %dx\n", time_multiplier);
+        break;
+    case SDLK_SPACE:
+        paused = !paused;
         break;
     default:
         break;
