@@ -52,6 +52,12 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    fprintf(stderr, "Keybindings:\n");
+    fprintf(stderr, "  left arrow: slow down time\n");
+    fprintf(stderr, "  right arrow: speed up time\n");
+    fprintf(stderr, "  space: pause\n");
+    fprintf(stderr, "  escape: exit\n");
+
     renderer_init();
 
     int i;
